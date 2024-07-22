@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform, Text, View } from 'react-native';
+import { Image, StyleSheet, Platform, Text, View, Button } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -28,6 +28,12 @@ export default function HomeScreen() {
   // <applicationContext.Provider value={{state, dispatch}}>
     <View>
       <Text style={styles.white}>Testing</Text>
+      <Button
+        onPress={() => {
+          console.log('You tapped the button!');
+        }}
+        title="Press Me"
+      />
       {/* <ButtonAppBar />
       <ChatBubble /> */}
       {/* {state.chatModalOpen && <ChatModal />} */}
