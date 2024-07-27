@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "hooks/customHook.js", "app/_layout.jsx", "app/(tabs)/_layout.jsx", "app/(tabs)/generator.jsx", "app/(tabs)/index.jsx", "app/(tabs)/pantry.jsx", "app/(tabs)/recipes.jsx", "app/+html.jsx", "app/+not-found.jsx", "components/AddIngredient.jsx", "components/Collapsible.jsx", "components/ExternalLink.jsx", "components/IngredientList.jsx"  ]
 }
