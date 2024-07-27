@@ -1,9 +1,7 @@
 import { Image, StyleSheet, Platform, Text, View, Pressable } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { IngredientList } from '@/components/IngredientList';
+
 
 // -----
 import React from 'react';
@@ -41,7 +39,7 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
-      {/* <IngredientList /> */}
+      <IngredientList />
 
       <Text
         style={[
