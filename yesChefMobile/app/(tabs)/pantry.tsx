@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Platform, Text, View, Pressable } from 'react-native';
 
 import { IngredientList } from '@/components/IngredientList';
+import { AddIngredient } from '@/components/AddIngredient';
 
 
 // -----
@@ -52,7 +53,7 @@ export default function HomeScreen() {
       >
         &#8226; add an ingredient
       </Text>
-      {/* <AddIngredient /> */}
+      <AddIngredient />
     </View>
   );
 }
