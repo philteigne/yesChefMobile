@@ -1,71 +1,83 @@
-import { Image, StyleSheet, Platform, Text, View, Button } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-// -----
-import React from 'react';
+const Generator: React.FC = () => {
+  const [recipeTags, setRecipeTags] = useState<string>('');
+  const [recipeFocus, setRecipeFocus] = useState<string>('');
+  const [recipeAvoid, setRecipeAvoid] = useState<string>('');
 
-// import './assets/fonts/fonts.css';
+  const handleSubmit = () => {
+    const recipeRequest = {
+      // allIngredients: state.ingredientList,
+      recipeTags: recipeTags,
+      recipeFocus: recipeFocus,
+      recipeAvoid: recipeAvoid,
+    }
 
-// import CreateRecipe from './Components/CreateRecipe.jsx';
-// import ButtonAppBar from './Components/Navigation';
-// import { applicationContext } from './hooks/applicationContext';
-// import useApplicationData from './hooks/customHook';
-// import HomePage from './Components/HomePage.jsx';
-// import SignInSide from './Components/Login.jsx';
-// import ViewRecipe from './Components/ViewRecipe.jsx';
-// import ChatBubble from './Components/ChatBubble.jsx';
-// import ChatModal from './Components/ChatModal.jsx';
-// import PrivateRoute from './Components/PrivateRoute.jsx';
+    // Dispatch action to add ingredient
+    // dispatch({ type: "REQUEST_RECIPE", payload: recipeRequest });
 
-// -----
+    // Dispatch action to set temporary parameter input for recipe regeneration
+    // dispatch({ type: "SET_TEMP_PARAMETER_INPUT", payload: recipeRequest })
+    // Clear input values
+    setRecipeTags('');
+    setRecipeFocus('');
+    setRecipeAvoid('');
+    console.log('submitted');
+    
+  }
 
-export default function HomeScreen() {
   return (
-  // <applicationContext.Provider value={{state, dispatch}}>
-    <View>
-      <Text style={styles.white}>Testing</Text>
-      <Button
-        onPress={() => {
-          console.log('You tapped the button!');
-        }}
-        title="Press Me"
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Recipe Generator</Text>
+      <TextInput
+        value={recipeTags}
+        onChangeText={setRecipeTags}
+        style={styles.input}
+        placeholder="What should we cook tonight?"
       />
-      {/* <ButtonAppBar />
-      <ChatBubble /> */}
-      {/* {state.chatModalOpen && <ChatModal />} */}
-      <View>
-        {/* <Route path='/' exact component={HomePage}/>
-        <Route path='/login' component={SignInSide} />
-        <PrivateRoute path="/create-recipe" component={CreateRecipe} auth={state.isLoggedIn} />
-        <PrivateRoute path="/view-recipe" component={ViewRecipe} auth={state.isLoggedIn} /> */}
-      </View>
-    </View>
-  // </applicationContext.Provider>
+      <TextInput
+        value={recipeFocus}
+        onChangeText={setRecipeFocus}
+        style={styles.input}
+        placeholder="What ingredients should we use?"
+      />
+      <TextInput
+        value={recipeAvoid}
+        onChangeText={setRecipeAvoid}
+        style={styles.input}
+        placeholder="What ingredients should we avoid?"
+      />
+      <Button title="Generate Recipe" onPress={handleSubmit} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    padding: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  input: {
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 20,
   },
-  white: {
-    color: 'white'
-  }
 });
+
+export default Generator;
