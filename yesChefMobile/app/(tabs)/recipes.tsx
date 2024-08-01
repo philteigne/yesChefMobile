@@ -20,7 +20,10 @@ function RecipeList({ navigation }) {
 
   const fetchRecipes = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/saved-recipes/user/${userId}`); 
+      const response = await fetch(`http://localhost:8080/api/saved-recipes/user/${userId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setRecipes(data);
     } catch (error) {
@@ -30,7 +33,10 @@ function RecipeList({ navigation }) {
 
   const fetchIngredients = async (recipeId) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/ingredients/recipe/${recipeId}`); 
+      const response = await fetch(`http://localhost:8080/api/ingredients/recipe/${recipeId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setIngredients(data);
     } catch (error) {
@@ -73,9 +79,8 @@ function RecipeList({ navigation }) {
           <Text style={styles.modalTitle}>{selectedRecipe?.title}</Text>
 
           <Text style={styles.ingredientsTitle}>Ingredients:</Text>
-
-          {selectedRecipe && recipeIngredients.find(ri => ri.recipeId === selectedRecipe.id)?.ingredients.map((ing, index) => (
-            <Text key={index}>{`${ing.quantity} ${ing.units} of ${ing.name} ${ing.ingredientId}`}</Text>
+          {recipeIngredients.map((ing, index) => (
+            <Text key={index}>{`${ing.quantity} ${ing.units} of ${ing.name}`}</Text>
           ))}
           <Text style={styles.ingredientsTitle}>Steps:</Text>
 
