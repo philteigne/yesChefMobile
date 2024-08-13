@@ -14,48 +14,7 @@ const INITIAL_STATE_APP = {
 
 // Pantry Component
 const INITIAL_STATE_PANTRY = {
-  ingredientList: [
-    {
-        id: 1,
-        name: "Flour",
-    },
-    {
-        id: 2,
-        name: "Sugar",
-    },
-    {
-        id: 3,
-        name: "Butter",
-    },
-    {
-        id: 4,
-        name: "Eggs",
-    },
-    {
-        id: 5,
-        name: "Milk",
-    },
-    {
-        id: 6,
-        name: "Baking Powder",
-    },
-    {
-        id: 7,
-        name: "Salt",
-    },
-    {
-        id: 8,
-        name: "Vanilla Extract",
-    },
-    {
-        id: 9,
-        name: "Cocoa Powder",
-    },
-    {
-        id: 10,
-        name: "Chocolate Chips",
-    }
-  ],
+  ingredientList: [],
   deleteIngredientState: null,
   addIngredientState: null,
 }
@@ -354,6 +313,7 @@ const useApplicationData = () => {
     })
       .then(response => response.json())
       .then(data => {
+        console.log("data", data)
         dispatch({ type: ACTIONS.SET_RECIPE_INGREDIENTS, payload: data });
       })
       .catch(err => {
@@ -431,13 +391,18 @@ const useApplicationData = () => {
   // INGREDIENTS 
   // fetch ingredients from backend
   useEffect(() => {
+    console.log("useEffect fired")
     fetch(`${API_CALL_URL}ingredients/${state.userId}`, {
       headers: {
         // 'Authorization': `Bearer ${sessionStorage.getItem('jwtToken')}`
       }
     })
       .then((res) => res.json())
-      .then((data) => dispatch({ type: ACTIONS.GET_INGREDIENTS_USER, payload: data }))
+      .then((data) => {
+        dispatch({ type: ACTIONS.GET_INGREDIENTS_USER, payload: data })
+        console.log(data)
+      })
+      .catch(err => console.log(err))
   }, [state.deleteIngredientState, state.addIngredientState, state.userId]);
 
   // delete an ingredient from backend 
