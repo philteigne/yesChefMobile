@@ -290,7 +290,8 @@ const useApplicationData = () => {
   // fetch recipes from backend
   const fetchRecipes = useCallback((userId) => {
     dispatch({ type: ACTIONS.ERROR, payload: null })
-    fetch(`/api/saved-recipes/user/${userId}`, {
+    console.log(`fetching for ${userId}`)
+    fetch(`${API_CALL_URL}saved-recipes/user/${userId}`, {
       headers: {
         // 'Authorization': `Bearer ${sessionStorage.getItem('jwtToken')}`
       }
@@ -306,7 +307,7 @@ const useApplicationData = () => {
 
   const fetchIngredients = useCallback((recipeId) => {
     dispatch({ type: ACTIONS.ERROR, payload: null })
-    fetch(`/api/ingredients/recipe/${recipeId}`, {
+    fetch(`${API_CALL_URL}ingredients/recipe/${recipeId}`, {
       headers: {
         // 'Authorization': `Bearer ${sessionStorage.getItem('jwtToken')}`
       }
@@ -354,7 +355,7 @@ const useApplicationData = () => {
   const deleteRecipe = useCallback(() => {
     const userId = state.userId;
     if (state.deleteRecipeState) {
-      fetch(`http://localhost:8080/api/saved-recipes/${userId}/${state.deleteRecipeState}`, {
+      fetch(`${API_CALL_URL}saved-recipes/${userId}/${state.deleteRecipeState}`, {
         method: 'DELETE',
         // headers: { 'Authorization': `Bearer ${sessionStorage.getItem('jwtToken')}` }
       })
@@ -477,8 +478,9 @@ const useApplicationData = () => {
 
   // fetch recipes from database, it runs when shouldRenderRecipe state changes and userId state changes
   useEffect(() => {
+    console.log("Fetching Recipes")
     fetchRecipes(state.userId);
-  }, [fetchRecipes, state.userId, state.shouldRerenderRecipes, state.deleteRecipeState]);
+  }, []);
 
   // fetch ingredients for specific recipe
   useEffect(() => {
