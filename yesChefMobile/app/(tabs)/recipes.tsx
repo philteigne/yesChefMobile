@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 
@@ -7,115 +7,46 @@ const Stack = createStackNavigator();
 function RecipeList({ navigation }) {
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [recipes, setRecipes] = useState([]);
+  const [recipeIngredients, setIngredients] = useState([]);
+
+  const userId = 2;
+
 
   
-  const mockRecipes = [
-    {
-      id: 1,
-      title: "Classic Bread",
-      tags: "baking, bread",
-      steps: "1. Mix ingredients. 2. Knead dough. 3. Let rise. 4. Bake at 200°C for 30 minutes."
-    },
-    {
-      id: 2,
-      title: "Chocolate Cake",
-      tags: "baking, dessert",
-      steps: "1. Mix dry ingredients. 2. Add wet ingredients. 3. Mix well. 4. Bake at 175°C for 45 minutes."
-    },
-    {
-      id: 3,
-      title: "Garlic Pasta",
-      tags: "italian, dinner",
-      steps: "1. Cook pasta. 2. Saute garlic in olive oil. 3. Toss pasta with garlic oil and cheese. 4. Serve warm."
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/saved-recipes/user/${userId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setRecipes(data);
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
     }
-  ];
-  
-  const recipeIngredients = [
-    {
-      recipeId: 1,
-      ingredients: [
-        {
-          ingredientId: 1,
-          name: "flour",
-          quantity: 500,
-          units: "grams"
-        },
-        {
-          ingredientId: 4,
-          name: "Yeast",
-          quantity: 15,
-          units: "grams"
-        },
-        {
-          ingredientId: 3,
-          name: "Salt",
-          quantity: 5,
-          units: "grams"
-        }
-      ]
-    },
-    {
-      recipeId: 2,
-      ingredients: [
-        {
-          ingredientId: 1,
-          name: "flour",
-          quantity: 250,
-          units: "grams"
-        },
-        {
-          ingredientId: 2,
-          name: "sugar",
-          quantity: 200,
-          units: "grams"
-        },
-        {
-          ingredientId: 9,
-          name: "Cocoa powder",
-          quantity: 50,
-          units: "grams"
-        },
-        {
-          ingredientId: 7,
-          name: "eggs",
-          quantity: 3,
-          units: "units"
-        },
-        {
-          ingredientId: 6,
-          name: "eggs",
-          quantity: 100,
-          units: "grams"
-        }
-      ]
-    },
-    {
-      recipeId: 3,
-      ingredients: [
-        {
-          ingredientId: 11,
-          name: "Olive Oil",
-          quantity: 100,
-          units: "ml"
-        },
-        {
-          ingredientId: 12,
-          name: "Garlic",
-          quantity: 30,
-          units: "grams"
-        },
-        {
-          ingredientId: 18,
-          name: "Cheese",
-          quantity: 150,
-          units: "grams"
-        }
-      ]
+  };
+
+  const fetchIngredients = async (recipeId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/ingredients/recipe/${recipeId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setIngredients(data);
+    } catch (error) {
+      console.error('Error fetching ingredients:', error);
     }
-  ];
+  };
   
   const handleSelectRecipe = (recipe, fullDetails = false) => {
     setSelectedRecipe(recipe);
+    fetchIngredients(recipe.id);
     if (fullDetails) {
       navigation.navigate('RecipeDetails', { recipe });
     } else {
@@ -132,7 +63,7 @@ function RecipeList({ navigation }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={mockRecipes}
+        data={recipes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
@@ -148,9 +79,8 @@ function RecipeList({ navigation }) {
           <Text style={styles.modalTitle}>{selectedRecipe?.title}</Text>
 
           <Text style={styles.ingredientsTitle}>Ingredients:</Text>
-
-          {selectedRecipe && recipeIngredients.find(ri => ri.recipeId === selectedRecipe.id)?.ingredients.map((ing, index) => (
-            <Text key={index}>{`${ing.quantity} ${ing.units} of ${ing.name} ${ing.ingredientId}`}</Text>
+          {recipeIngredients.map((ing, index) => (
+            <Text key={index}>{`${ing.quantity} ${ing.units} of ${ing.name}`}</Text>
           ))}
           <Text style={styles.ingredientsTitle}>Steps:</Text>
 
