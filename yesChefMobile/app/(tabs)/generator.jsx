@@ -63,7 +63,7 @@ const Generator = () => {
           placeholder="What ingredients should we avoid?"
         />
         <Button title="Generate Recipe" onPress={handleSubmit} />
-        {state.isLoading? (<p>is loading</p>): (<p>is not loading</p>)}
+        {state.isLoading? (<Text>is loading</Text>): (<Text>is not loading</Text>)}
       </View>
     )}
       {state.recipeResponse && <RecipeOutput/>}
