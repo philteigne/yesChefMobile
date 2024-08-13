@@ -1,52 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { applicationContext } from '@/hooks/applicationContext';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, Modal } from 'react-native';
 
 const Stack = createStackNavigator();
 
 function RecipeList({ navigation }) {
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+  const {state, dispatch} = useContext(applicationContext)
+
+  const recipe = state.recipes.find(r => r.id === state.activeRecipe);
+
   const [modalVisible, setModalVisible] = useState(false);
-  const [recipes, setRecipes] = useState([]);
-  const [recipeIngredients, setIngredients] = useState([]);
-
-  const userId = 2;
-
-
-  
-  useEffect(() => {
-    fetchRecipes();
-  }, []);
-
-  const fetchRecipes = async () => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/saved-recipes/user/${userId}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setRecipes(data);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    }
-  };
-
-  const fetchIngredients = async (recipeId) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/ingredients/recipe/${recipeId}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setIngredients(data);
-    } catch (error) {
-      console.error('Error fetching ingredients:', error);
-    }
-  };
   
   const handleSelectRecipe = (recipe, fullDetails = false) => {
-    setSelectedRecipe(recipe);
-    fetchIngredients(recipe.id);
+    dispatch({type: "SET_ACTIVE_RECIPE", payload: recipe.id})
+    console.log(state.activeRecipe)
     if (fullDetails) {
       navigation.navigate('RecipeDetails', { recipe });
     } else {
@@ -61,9 +30,10 @@ function RecipeList({ navigation }) {
   );
 
   return (
+      
     <View style={styles.container}>
       <FlatList
-        data={recipes}
+        data={state.recipes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
@@ -76,15 +46,15 @@ function RecipeList({ navigation }) {
         }}
       >
         <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>{selectedRecipe?.title}</Text>
+          <Text style={styles.modalTitle}>{recipe?.title}</Text>
 
           <Text style={styles.ingredientsTitle}>Ingredients:</Text>
-          {recipeIngredients.map((ing, index) => (
+          {(state.recipeIngredients).map((ing, index) => (
             <Text key={index}>{`${ing.quantity} ${ing.units} of ${ing.name}`}</Text>
           ))}
           <Text style={styles.ingredientsTitle}>Steps:</Text>
 
-          <Text>{selectedRecipe?.steps}</Text>
+          <Text>{recipe?.steps}</Text>
 
           <TouchableOpacity
             style={styles.buttonClose}
