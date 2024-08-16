@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ScrollView, ActivityIndicator } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -15,6 +15,7 @@ const Generator = () => {
 
   const {dispatch,state} = useContext(applicationContext);
 
+  const {isLoading} = state;
   const testRecipeOutputState = true;
 
   const handleSubmit = () => {
@@ -41,31 +42,38 @@ const Generator = () => {
   return (
     
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {!state.recipeResponse && (
-            <View style={styles.container}>
-        <Text style={styles.title}>Recipe Generator</Text>
-        <TextInput
-          value={recipeTags}
-          onChangeText={setRecipeTags}
-          style={styles.input}
-          placeholder="What should we cook tonight?"
-        />
-        <TextInput
-          value={recipeFocus}
-          onChangeText={setRecipeFocus}
-          style={styles.input}
-          placeholder="What ingredients should we use?"
-        />
-        <TextInput
-          value={recipeAvoid}
-          onChangeText={setRecipeAvoid}
-          style={styles.input}
-          placeholder="What ingredients should we avoid?"
-        />
-        <Button title="Generate Recipe" onPress={handleSubmit} />
-        {state.isLoading? (<Text>is loading</Text>): (<Text>is not loading</Text>)}
-      </View>
-    )}
+      {/* Loading animation */}
+      { isLoading && (
+        <View >
+          <ActivityIndicator/>
+        </View>
+      ) }
+      {/* When loading is false and no recipeResponse in state show recipe generation input */}
+      {!state.recipeResponse && !isLoading && (
+        <View style={styles.container}>
+          <Text style={styles.title}>Recipe Generator</Text>
+          <TextInput
+            value={recipeTags}
+            onChangeText={setRecipeTags}
+            style={styles.input}
+            placeholder="What should we cook tonight?"
+          />
+          <TextInput
+            value={recipeFocus}
+            onChangeText={setRecipeFocus}
+            style={styles.input}
+            placeholder="What ingredients should we use?"
+          />
+          <TextInput
+            value={recipeAvoid}
+            onChangeText={setRecipeAvoid}
+            style={styles.input}
+            placeholder="What ingredients should we avoid?"
+          />
+          <Button title="Generate Recipe" onPress={handleSubmit} />
+        </View>
+      )}
+      {/* show recipeResponse from chatGPT when it is loaded */}
       {state.recipeResponse && <RecipeOutput/>}
     </ScrollView>
   );
