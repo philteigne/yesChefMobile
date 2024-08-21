@@ -24,6 +24,23 @@ const RecipeOutput = () => {
   const clearRecipe = () => {
     dispatch({type: 'CLEAR_RECIPE_RESPONSE'})
   }
+
+  const handleSave = () => {
+    if (!state.recipeResponse) {
+      console.error("No recipe data to save.");
+      return;
+    }
+    // changes state in saveRecipeData 
+    // Dispatch an action that includes the recipe data to be saved
+    dispatch({
+      type: "SAVE_RECIPE",
+      payload: { userId: state.userId, recipe: state.recipeResponse }
+    })
+    
+    dispatch({type: "SET_SAVE_RECIPE_LOADING", payload: true})
+
+  };
+
   return (
     <View style={styles.container}>
       {/* RECIPE TITLE AND TAGS */}
@@ -56,6 +73,10 @@ const RecipeOutput = () => {
       <Button
         title='Clear'
         onPress={clearRecipe}
+      />
+      <Button
+        title='Save'
+        onPress={handleSave}
       />
     </View>
   );
