@@ -1,7 +1,10 @@
 import { StyleSheet, View, TextInput, Pressable, Text } from 'react-native';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { applicationContext } from '@/hooks/applicationContext';
 
 export function AddIngredient() {
+
+  const { state, dispatch } = useContext(applicationContext)
 
   const [ingredientName, setIngredientName] = useState('');
 
@@ -12,7 +15,7 @@ export function AddIngredient() {
     }
 
     // Dispatch action to add ingredient
-    console.log("Ingredient Added ", ingredientName);
+    dispatch({type: "ADD_INGREDIENTS_USER", payload: inputIngredient})
 
     // Clear input values
     setIngredientName('');
